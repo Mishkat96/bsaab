@@ -1,0 +1,35 @@
+[20-Aug-2024 16:28:39 UTC] PHP Fatal error:  Uncaught Exception: File is too large. Maximum size allowed is 5MB. in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php:168
+Stack trace:
+#0 /home/bsaabco1/public_html/Auth/add-members.php(37): DatabaseQuery->uploadMedia(Array, 'assets/images/')
+#1 {main}
+  thrown in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php on line 168
+[20-Aug-2024 16:30:25 UTC] PHP Fatal error:  Uncaught Exception: File is too large. Maximum size allowed is 5MB. in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php:168
+Stack trace:
+#0 /home/bsaabco1/public_html/Auth/add-members.php(37): DatabaseQuery->uploadMedia(Array, 'assets/images/')
+#1 {main}
+  thrown in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php on line 168
+[20-Aug-2024 17:11:50 UTC] PHP Fatal error:  Uncaught Exception: File upload error. in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php:147
+Stack trace:
+#0 /home/bsaabco1/public_html/Auth/add-video.php(9): DatabaseQuery->uploadMedia(Array, 'assets/images/')
+#1 {main}
+  thrown in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php on line 147
+[20-Aug-2024 17:20:00 UTC] PHP Fatal error:  Uncaught Exception: File upload error. in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php:147
+Stack trace:
+#0 /home/bsaabco1/public_html/Auth/add-video.php(9): DatabaseQuery->uploadMedia(Array, 'assets/images/')
+#1 {main}
+  thrown in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php on line 147
+[20-Aug-2024 17:20:17 UTC] PHP Fatal error:  Uncaught Exception: File upload error. in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php:147
+Stack trace:
+#0 /home/bsaabco1/public_html/Auth/add-video.php(9): DatabaseQuery->uploadMedia(Array, 'assets/images/')
+#1 {main}
+  thrown in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php on line 147
+[20-Aug-2024 17:20:33 UTC] PHP Fatal error:  Uncaught Exception: File upload error. in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php:147
+Stack trace:
+#0 /home/bsaabco1/public_html/Auth/add-video.php(9): DatabaseQuery->uploadMedia(Array, 'assets/images/')
+#1 {main}
+  thrown in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php on line 147
+[20-Aug-2024 17:20:38 UTC] PHP Fatal error:  Uncaught Exception: File upload error. in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php:147
+Stack trace:
+#0 /home/bsaabco1/public_html/Auth/add-video.php(9): DatabaseQuery->uploadMedia(Array, 'assets/images/')
+#1 {main}
+  thrown in /home/bsaabco1/public_html/Auth/assets/php/commonClass.php on line 147
