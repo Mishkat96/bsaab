@@ -10,10 +10,15 @@ export interface Member {
   name: string;
   role: string;
   photo?: ImageMetadata;
+  quote?: string;
 }
 
 export const founding: Member[] = [
-  { name: 'Ekram Hossain', role: 'President', photo: ekram },
+  {
+    name: 'Ekram Hossain', role: 'President', photo: ekram,
+    // Based on the official vision statement; replace with Ekram's own words when available.
+    quote: 'Our vision is to become one of the best student associations in Belgium, and to help every member reach their highest level of success.',
+  },
   { name: 'Tanvirul Hoque', role: 'Senior Vice President', photo: tanvirul },
   { name: 'MD Shahin Kabir', role: 'Secretary', photo: shahin },
   { name: 'MD Monir Hossain', role: 'Finance Secretary (Treasurer)', photo: monir },
@@ -22,8 +27,8 @@ export const founding: Member[] = [
   { name: 'Tirtha Sarathi Das', role: 'Social Welfare Secretary' },
 ];
 
-// The five portraits shown in the hero fan, left to right (President in the centre).
-export const heroTeam: string[] = ['Tanvirul Hoque', 'MD Shahin Kabir', 'Ekram Hossain', 'MD Monir Hossain', 'Allama Iqbal'];
+// People in the hero spotlight, in order; the first is shown on load.
+export const heroTeam: string[] = ['Ekram Hossain', 'Tanvirul Hoque', 'MD Shahin Kabir', 'MD Monir Hossain', 'Allama Iqbal'];
 
 export const executive: Member[] = [
   { name: 'Ananna Saha', role: 'Joint Cultural Secretary' },

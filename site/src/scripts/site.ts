@@ -63,6 +63,26 @@ document.querySelectorAll<HTMLElement>('.spot').forEach((card) => card.addEventL
   card.style.setProperty('--y', `${e.clientY - r.top}px`);
 }));
 
+/* ---------- Founding-team spotlight ---------- */
+const thumbs = [...document.querySelectorAll<HTMLButtonElement>('[data-spot-thumb]')];
+const spotImgs = [...document.querySelectorAll<HTMLElement>('[data-spot-img]')];
+const spotPanels = [...document.querySelectorAll<HTMLElement>('[data-spot-panel]')];
+const showPerson = (index: number) => {
+  thumbs.forEach((t, i) => { t.classList.toggle('is-active', i === index); t.setAttribute('aria-pressed', String(i === index)); });
+  spotImgs.forEach((img, i) => img.classList.toggle('is-active', i === index));
+  spotPanels.forEach((p, i) => { p.classList.toggle('is-active', i === index); p.setAttribute('aria-hidden', String(i !== index)); });
+};
+thumbs.forEach((t, i) => {
+  t.addEventListener('click', () => showPerson(i));
+  t.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    const next = (i + (e.key === 'ArrowRight' ? 1 : -1) + thumbs.length) % thumbs.length;
+    showPerson(next);
+    thumbs[next].focus();
+  });
+});
+
 /* ---------- Forms ----------
    With PUBLIC_FORM_ENDPOINT set (e.g. a Formspree URL) submissions are POSTed there as JSON.
    Without it, the site runs in preview mode and says so instead of pretending to send. */
@@ -146,29 +166,9 @@ if (!reduce) {
     tl.to('.hero-title .line > span', { y: 0, duration: 1.5, stagger: 0.1 }, 0.15)
       .to('[data-hero]', { opacity: 1, y: 0, duration: 1.2, stagger: 0.08 }, 0.55);
 
-    // Fanned founding-team portraits
-    const cards = gsap.utils.toArray<HTMLElement>('.fan-card');
-    const mid = (cards.length - 1) / 2;
-    cards.forEach((c, i) => gsap.set(c, { zIndex: 10 - Math.abs(i - mid) * 2 }));
-    tl.fromTo(cards,
-      { opacity: 0, y: 220, x: 0, rotate: 0, scale: 0.85 },
-      { opacity: 1, scale: 1, duration: 1.8, stagger: 0.07,
-        x: (i) => (i - mid) * 66, y: (i) => Math.abs(i - mid) * 20, rotate: (i) => (i - mid) * 6.5 }, 0.3);
-
-    if (cards.length) {
-      hero.addEventListener('pointermove', (e) => {
-        const dx = e.clientX / innerWidth - 0.5;
-        const dy = e.clientY / innerHeight - 0.5;
-        cards.forEach((c) => {
-          const d = Number(c.dataset.depth) || 1;
-          gsap.to(c, { xPercent: dx * 10 * d, yPercent: dy * 8 * d, duration: 1.2, ease: 'power3.out', overwrite: 'auto' });
-        });
-      });
-      cards.forEach((c) => {
-        c.addEventListener('pointerenter', () => gsap.to(c, { scale: 1.07, duration: 0.6, ease: 'power3.out' }));
-        c.addEventListener('pointerleave', () => gsap.to(c, { scale: 1, duration: 0.6, ease: 'power3.out' }));
-      });
-    }
+    // Spotlight intro: stage rises in, thumbnails follow
+    tl.fromTo('.spot-stage', { opacity: 0, y: 60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 1.6 }, 0.35)
+      .fromTo('.spot-thumb', { opacity: 0, y: 16 }, { opacity: (i) => (i === 0 ? 1 : 0.5), y: 0, duration: 0.9, stagger: 0.06, clearProps: 'opacity,transform' }, 0.9);
 
     // Scroll reveals
     ScrollTrigger.batch('[data-reveal]', {

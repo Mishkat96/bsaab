@@ -9,9 +9,7 @@ import {
   advisory, membershipTypes, statuses,
 } from '../data/site';
 
-const fanTeam = heroTeam.map((name) => founding.find((m) => m.name === name && m.photo)!).filter(Boolean);
-const withPhotos = fanTeam;
-const fanDepth = [0.6, 0.9, 1.3, 0.9, 0.6];
+const spotlight = heroTeam.flatMap((name) => founding.filter((m) => m.name === name && m.photo));
 
 const stats = [
   { n: 3, label: 'Membership categories' },
@@ -53,27 +51,38 @@ const formEndpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
           <a href="#join" class="btn btn-brass btn-lg">Become a member <Icon name="arrow" class="w-4 h-4" /></a>
           <a href="#about" class="btn btn-ghost-light btn-lg">Learn more</a>
         </div>
-        <div data-hero class="mt-12 flex items-center gap-4 md:hidden">
-          <div class="flex -space-x-3">
-            {withPhotos.map((m) => (
-              <Image src={m.photo!} alt={m.name} width={88} height={88} class="w-11 h-11 rounded-full object-cover object-top ring-2 ring-ink" />
-            ))}
-          </div>
-          <p class="text-sm text-ivory/60">Founded by students &amp; alumni across Belgium</p>
-        </div>
       </div>
 
-      <div class="lg:col-span-5 hidden md:block">
-        <div class="fan" id="fan">
-          {fanTeam.map((m, i) => (
-            <figure class="fan-card" data-depth={fanDepth[i] ?? 1}>
-              <Image src={m.photo!} alt={m.name} width={440} loading="eager" />
-              <figcaption class="tag">
-                <span class="block text-[13px] font-semibold leading-tight">{m.name}</span>
-                <span class="block text-[11px] text-ivory/60 mt-0.5">{m.role}</span>
-              </figcaption>
-            </figure>
+      <!-- Founding-team spotlight: click a thumbnail to feature that person -->
+      <div class="lg:col-span-5 w-full max-w-[520px] lg:max-w-none mx-auto" id="spotlight">
+        <div class="spot-stage relative aspect-[3/4] sm:aspect-[5/6] rounded-[28px] overflow-hidden ring-1 ring-white/10">
+          {spotlight.map((m, i) => (
+            <Image src={m.photo!} alt="" aria-hidden="true" width={900} widths={[520, 900]} sizes="(min-width: 1024px) 40vw, 92vw"
+                   loading="eager" data-spot-img class:list={['spot-img', { 'is-active': i === 0 }]} />
           ))}
+          <div class="spot-shade" aria-hidden="true"></div>
+          <div class="spot-info absolute inset-x-0 bottom-0 p-6 sm:p-8" aria-live="polite">
+            {spotlight.map((m, i) => (
+              <div data-spot-panel class:list={['spot-panel', { 'is-active': i === 0 }]} aria-hidden={i === 0 ? 'false' : 'true'}>
+                <p class="text-[12px] font-semibold uppercase tracking-[0.16em] text-brass">{m.role}</p>
+                <p class="font-display font-bold text-3xl sm:text-4xl tracking-tight mt-2 leading-none">{m.name}</p>
+                {m.quote
+                  ? <blockquote class="mt-3 sm:mt-4 text-sm sm:text-base text-ivory/80 leading-relaxed max-w-sm">&ldquo;{m.quote}&rdquo;</blockquote>
+                  : <p class="mt-3 text-sm text-ivory/60">Founding member of BSAAB</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="mt-5 flex items-center justify-between gap-4">
+          <div class="flex gap-2.5" role="group" aria-label="Founding team">
+            {spotlight.map((m, i) => (
+              <button type="button" data-spot-thumb class:list={['spot-thumb', { 'is-active': i === 0 }]}
+                      aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${m.name}, ${m.role}`} title={m.name}>
+                <Image src={m.photo!} alt="" width={112} height={112} />
+              </button>
+            ))}
+          </div>
+          <p class="hidden sm:block text-[13px] text-ivory/50 text-right leading-snug">Founding<br />team</p>
         </div>
       </div>
     </div>
