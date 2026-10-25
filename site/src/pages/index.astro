@@ -3,15 +3,14 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
 import logo from '../assets/logo.png';
-import { founding, executive, initials } from '../data/committee';
+import { founding, executive, heroTeam, initials } from '../data/committee';
 import {
   REG_NUMBER, EMAIL, FACEBOOK_URL, CBE_URL, cities, registration, goals, activities,
   advisory, membershipTypes, statuses,
 } from '../data/site';
 
-const withPhotos = founding.filter((m) => m.photo);
-// President front-and-centre in the fan.
-const fanTeam = [...withPhotos.slice(1, 3), withPhotos[0], ...withPhotos.slice(3)];
+const fanTeam = heroTeam.map((name) => founding.find((m) => m.name === name && m.photo)!).filter(Boolean);
+const withPhotos = fanTeam;
 const fanDepth = [0.6, 0.9, 1.3, 0.9, 0.6];
 
 const stats = [

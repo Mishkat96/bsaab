@@ -4,6 +4,7 @@ import tanvirul from '../assets/team/tanvirul-hoque.jpg';
 import shahin from '../assets/team/shahin-kabir.jpg';
 import fazley from '../assets/team/fazley-rabbi.jpg';
 import allama from '../assets/team/allama-iqbal.jpg';
+import monir from '../assets/team/monir-hossain.jpg';
 
 export interface Member {
   name: string;
@@ -15,11 +16,14 @@ export const founding: Member[] = [
   { name: 'Ekram Hossain', role: 'President', photo: ekram },
   { name: 'Tanvirul Hoque', role: 'Senior Vice President', photo: tanvirul },
   { name: 'MD Shahin Kabir', role: 'Secretary', photo: shahin },
-  { name: 'MD Monir Hossain', role: 'Finance Secretary (Treasurer)' },
+  { name: 'MD Monir Hossain', role: 'Finance Secretary (Treasurer)', photo: monir },
   { name: 'MD Fazley Rabbi', role: 'Organizing Secretary', photo: fazley },
   { name: 'Allama Iqbal', role: 'ICT Secretary', photo: allama },
   { name: 'Tirtha Sarathi Das', role: 'Social Welfare Secretary' },
 ];
+
+// The five portraits shown in the hero fan, left to right (President in the centre).
+export const heroTeam: string[] = ['Tanvirul Hoque', 'MD Shahin Kabir', 'Ekram Hossain', 'MD Monir Hossain', 'Allama Iqbal'];
 
 export const executive: Member[] = [
   { name: 'Ananna Saha', role: 'Joint Cultural Secretary' },
