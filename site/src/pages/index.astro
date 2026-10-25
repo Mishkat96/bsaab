@@ -1,0 +1,428 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import logo from '../assets/logo.png';
+import { founding, executive, initials } from '../data/committee';
+import {
+  REG_NUMBER, EMAIL, FACEBOOK_URL, CBE_URL, cities, registration, goals, activities,
+  advisory, membershipTypes, statuses,
+} from '../data/site';
+
+const withPhotos = founding.filter((m) => m.photo);
+// President front-and-centre in the fan.
+const fanTeam = [...withPhotos.slice(1, 3), withPhotos[0], ...withPhotos.slice(3)];
+const fanDepth = [0.6, 0.9, 1.3, 0.9, 0.6];
+
+const stats = [
+  { n: 3, label: 'Membership categories' },
+  { n: 25, label: 'Executive Committee seats' },
+  { n: goals.length, label: 'Goals guiding our work' },
+  { n: cities.length, label: 'Cities with local organisers' },
+];
+const tones = ['bg-pine-soft text-pine', 'bg-brass-soft text-brass-ink'];
+const pad = (n: number) => String(n).padStart(2, '0');
+const formEndpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+---
+<Layout>
+<main id="main">
+
+  <!-- HERO -->
+  <section id="top" class="hero relative min-h-svh overflow-hidden text-ivory flex flex-col">
+    <div aria-hidden="true" class="absolute inset-0 overflow-hidden">
+      <span class="blob blob-red"></span><span class="blob blob-brass"></span><span class="blob blob-green"></span>
+      <div class="hero-grid"></div>
+      <div class="grain"></div>
+    </div>
+
+    <div class="wrap relative flex-1 w-full grid lg:grid-cols-12 items-center gap-10 pt-32 pb-12 lg:pt-28">
+      <div class="lg:col-span-7">
+        <p data-hero class="inline-flex items-center gap-2.5 rounded-full bg-white/[.07] ring-1 ring-white/15 pl-2 pr-4 py-1.5 text-[13px] backdrop-blur">
+          <span class="w-6 h-6 rounded-full bg-pine grid place-items-center"><Icon name="check" class="w-3.5 h-3.5 text-white" /></span>
+          Registered non-profit · Brussels, Belgium
+        </p>
+        <h1 class="hero-title mt-8">
+          <span class="line"><span>Bangladeshi</span></span>
+          <span class="line"><span>Students <span class="outline-text">&amp;</span></span></span>
+          <span class="line"><span>Alumni</span></span>
+          <span class="line"><span class="text-brass">in Belgium.</span></span>
+        </h1>
+        <p data-hero class="mt-8 text-lg lg:text-xl text-ivory/70 max-w-xl leading-relaxed">
+          Whether you are a current student eager to connect with mentors or an alumnus looking to give back, our association welcomes you. Together we build a vibrant and supportive community.
+        </p>
+        <div data-hero class="mt-10 flex flex-wrap gap-3">
+          <a href="#join" class="btn btn-brass btn-lg">Become a member <Icon name="arrow" class="w-4 h-4" /></a>
+          <a href="#about" class="btn btn-ghost-light btn-lg">Learn more</a>
+        </div>
+        <div data-hero class="mt-12 flex items-center gap-4 md:hidden">
+          <div class="flex -space-x-3">
+            {withPhotos.map((m) => (
+              <Image src={m.photo!} alt={m.name} width={88} height={88} class="w-11 h-11 rounded-full object-cover object-top ring-2 ring-ink" />
+            ))}
+          </div>
+          <p class="text-sm text-ivory/60">Founded by students &amp; alumni across Belgium</p>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 hidden md:block">
+        <div class="fan" id="fan">
+          {fanTeam.map((m, i) => (
+            <figure class="fan-card" data-depth={fanDepth[i] ?? 1}>
+              <Image src={m.photo!} alt={m.name} width={440} loading="eager" />
+              <figcaption class="tag">
+                <span class="block text-[13px] font-semibold leading-tight">{m.name}</span>
+                <span class="block text-[11px] text-ivory/60 mt-0.5">{m.role}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="relative border-t border-white/10 py-5 overflow-hidden text-ivory/55">
+      <div class="ticker-track" aria-hidden="true">
+        {[0, 1].map(() => (
+          <div class="flex items-center gap-10 pr-10 font-display text-lg whitespace-nowrap">
+            {cities.map((c) => <><span>{c}</span><span class="text-brass">✦</span></>)}
+            <span>Enterprise no. {REG_NUMBER}</span><span class="text-brass">✦</span>
+            <span>Est. 14 November 2024</span><span class="text-brass">✦</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="bg-ink text-ivory">
+    <div class="wrap grid grid-cols-2 lg:grid-cols-4">
+      {stats.map((s, i) => (
+        <div data-reveal class:list={[
+          'py-10 lg:py-14 border-white/10',
+          { 'pl-6 border-l': i % 2 === 1, 'border-t lg:border-t-0': i >= 2, 'lg:pl-6 lg:border-l': i === 2 },
+        ]}>
+          <p class="font-display font-bold text-6xl lg:text-7xl tracking-tight text-brass"><span data-count={s.n}>{s.n}</span></p>
+          <p class="mt-3 text-sm text-ivory/55">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- REGISTRATION -->
+  <section class="py-24 lg:py-32">
+    <div class="wrap">
+      <div data-reveal class="card overflow-hidden grid lg:grid-cols-12">
+        <div class="lg:col-span-8 p-8 sm:p-12 lg:p-14">
+          <p class="kicker text-pine">Officially registered in Belgium</p>
+          <h2 class="font-display font-bold text-3xl sm:text-5xl tracking-tight mt-5 leading-[1.02]">BSAAB is a registered<br class="hidden sm:block" /> non-profit organisation</h2>
+          <div class="mt-8 flex flex-wrap items-center gap-3">
+            <span class="text-sm text-ink/55">Enterprise number</span>
+            <button type="button" id="copyReg" data-copy={REG_NUMBER} class="group inline-flex items-center gap-3 rounded-full bg-ivory pl-5 pr-2 py-2 ring-1 ring-ink/10 hover:ring-ink/30 transition">
+              <span class="font-mono font-semibold tracking-wide">{REG_NUMBER}</span>
+              <span class="w-8 h-8 rounded-full bg-white grid place-items-center ring-1 ring-ink/10 text-ink/60 group-hover:text-ink"><Icon name="copy" class="w-4 h-4" /></span>
+            </button>
+            <span id="copyMsg" class="text-sm text-pine opacity-0 transition-opacity" aria-live="polite">Copied</span>
+          </div>
+          <dl class="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-px bg-ink/10 rounded-2xl overflow-hidden ring-1 ring-ink/10">
+            {registration.map((r) => (
+              <div class="bg-white p-5">
+                <dt class="text-[11px] uppercase tracking-[0.14em] text-ink/45 font-semibold">{r.label}</dt>
+                <dd class="mt-2 text-[15px] font-medium leading-snug">{r.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p class="mt-6 text-sm text-ink/50">Source: <a href={CBE_URL} target="_blank" rel="noopener" class="underline underline-offset-4 decoration-ink/20 hover:decoration-ink">Crossroads Bank for Enterprises (CBE)</a>, Belgian federal government public register.</p>
+        </div>
+        <div class="lg:col-span-4 relative bg-cream grid place-items-center p-12 min-h-[300px] overflow-hidden">
+          <div class="relative w-60 h-60">
+            <svg viewBox="0 0 200 200" class="absolute inset-0 w-full h-full stamp-text" aria-hidden="true">
+              <defs><path id="circle" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0" /></defs>
+              <text font-family="Inter Variable, Inter, sans-serif" font-size="11.5" font-weight="600" letter-spacing="3.6" fill="#1E4D3B">
+                <textPath href="#circle">REGISTERED NON-PROFIT · BRUSSELS · EST. 2024 ·</textPath>
+              </text>
+            </svg>
+            <div class="absolute inset-[38px] rounded-full bg-white grid place-items-center shadow-[0_20px_40px_-20px_rgba(18,16,20,.4)] ring-1 ring-ink/5">
+              <Image src={logo} alt="BSAAB logo" width={240} class="w-[78%] h-auto" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="pb-24 lg:pb-32 scroll-mt-20">
+    <div class="wrap grid lg:grid-cols-12 gap-12 lg:gap-16">
+      <div class="lg:col-span-7">
+        <p data-reveal class="kicker text-pine">About us</p>
+        <h2 data-reveal class="h-section mt-6">A home for Bangladeshi students in Belgium</h2>
+        <div class="mt-10 grid sm:grid-cols-2 gap-8 text-ink/70 leading-relaxed">
+          <p data-reveal>The Bangladeshi Student and Alumni Association in Belgium (BSAAB) was formed by a representative team of existing and former students who wanted to promote fellowship, support the mission and vision of their alma maters, and contribute to the development and welfare of our community.</p>
+          <p data-reveal>Our registered office is in Brussels. Branch offices and chapters may be established elsewhere in Belgium or overseas, coordinated with the main office.</p>
+        </div>
+      </div>
+      <aside data-reveal class="lg:col-span-5 lg:pt-16">
+        <div class="card p-8 lg:p-10">
+          <p class="font-display font-semibold text-2xl tracking-tight">Get in touch</p>
+          <ul class="mt-6 divide-y divide-ink/10">
+            <li class="py-4 flex items-center gap-4">
+              <span class="w-11 h-11 rounded-2xl bg-pine-soft text-pine grid place-items-center"><Icon name="mail" /></span>
+              <div><p class="text-xs text-ink/50">Email</p><a href={`mailto:${EMAIL}`} class="font-medium hover:text-pine">{EMAIL}</a></div>
+            </li>
+            <li class="py-4 flex items-center gap-4">
+              <span class="w-11 h-11 rounded-2xl bg-brass-soft text-brass-ink grid place-items-center"><Icon name="pin" /></span>
+              <div><p class="text-xs text-ink/50">Office</p><p class="font-medium">Brussels, Belgium</p></div>
+            </li>
+            <li class="py-4 flex items-center gap-4">
+              <span class="w-11 h-11 rounded-2xl bg-pine-soft text-pine grid place-items-center"><Icon name="facebook" /></span>
+              <div><p class="text-xs text-ink/50">Community</p><a href={FACEBOOK_URL} target="_blank" rel="noopener" class="font-medium hover:text-pine inline-flex items-center gap-1">Join our Facebook group <Icon name="arrow-up-right" class="w-4 h-4" /></a></div>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <div id="mission" class="wrap mt-20 lg:mt-28 grid md:grid-cols-2 gap-5">
+      <article data-reveal class="relative overflow-hidden rounded-[28px] bg-pine text-ivory p-10 lg:p-14 min-h-[360px] flex flex-col justify-between">
+        <span aria-hidden="true" data-parallax class="absolute -right-10 -top-10 w-64 h-64 rounded-full bg-white/[.06]"></span>
+        <p class="kicker text-brass">Our vision</p>
+        <div class="relative">
+          <h3 class="font-display font-bold text-3xl lg:text-[2.6rem] leading-[1.02] tracking-tight">One of the best student associations in Belgium</h3>
+          <p class="mt-5 text-ivory/75 leading-relaxed max-w-md">To become one of the best student associations in Belgium that contributes to Bangladeshi student and community development, and to nation building as well.</p>
+        </div>
+      </article>
+      <article data-reveal class="relative overflow-hidden rounded-[28px] bg-brass-soft text-ink p-10 lg:p-14 min-h-[360px] flex flex-col justify-between ring-1 ring-brass/30">
+        <span aria-hidden="true" data-parallax class="absolute -right-10 -bottom-16 w-72 h-72 rounded-full bg-white/25"></span>
+        <p class="kicker text-pine">Our mission</p>
+        <div class="relative">
+          <h3 class="font-display font-bold text-3xl lg:text-[2.6rem] leading-[1.02] tracking-tight">Develop and support Bangladeshi students</h3>
+          <p class="mt-5 text-ink/75 leading-relaxed max-w-md">To develop and support Bangladeshi students in Belgium by making the best use of their knowledge, experience and resources, building interpersonal relationships, and helping current and former students reach the highest level of success.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- GOALS -->
+  <section id="goals" class="goals bg-ink text-ivory overflow-hidden">
+    <div class="min-h-svh flex flex-col justify-center py-24">
+      <div class="wrap w-full flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div>
+          <p data-reveal class="kicker text-brass">Goals &amp; objectives</p>
+          <h2 data-reveal class="h-section mt-6">What we work towards</h2>
+        </div>
+        <div data-reveal class="lg:text-right">
+          <p class="text-ivory/55 max-w-xs lg:ml-auto">Seventeen goals, written into our constitution.</p>
+          <div class="hidden lg:block mt-5 w-56 h-[3px] bg-white/10 rounded-full overflow-hidden ml-auto"><div class="goals-progress h-full w-0 bg-brass"></div></div>
+        </div>
+      </div>
+      <div class="mt-14 overflow-x-auto lg:overflow-visible snap-x snap-mandatory lg:snap-none [scrollbar-width:none]">
+        <div class="goals-track flex gap-5 px-5 md:px-10 lg:pl-[max(40px,calc((100vw-1280px)/2+40px))] w-max">
+          {goals.map((g, i) => (
+            <article class="goal-card snap-start rounded-[24px] bg-white/[.04] ring-1 ring-white/10 p-8 flex flex-col justify-between min-h-[320px] hover:bg-white/[.07] transition-colors">
+              <span class="goal-num">{pad(i + 1)}</span>
+              <p class="text-lg leading-snug text-ivory/85 mt-10">{g}</p>
+            </article>
+          ))}
+          <div class="w-5 md:w-10 shrink-0" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVITIES -->
+  <section class="py-24 lg:py-32">
+    <div class="wrap">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div>
+          <p data-reveal class="kicker text-pine">What we do</p>
+          <h2 data-reveal class="h-section mt-6">Our activities</h2>
+        </div>
+        <p data-reveal class="text-ink/60 max-w-sm">How the association turns its goals into something members feel every semester.</p>
+      </div>
+      <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {activities.map((a, i) => (
+          <article data-reveal class="card spot lift p-8 lg:p-10 flex flex-col min-h-[280px]">
+            <div class="flex items-start justify-between">
+              <span class:list={['w-14 h-14 rounded-2xl grid place-items-center', tones[i % 2]]}><Icon name={a.icon} class="w-6 h-6" /></span>
+              <span class="font-display text-ink/20 text-2xl font-semibold">{pad(i + 1)}</span>
+            </div>
+            <h3 class="font-display font-semibold text-2xl tracking-tight mt-auto pt-10">{a.title}</h3>
+            <p class="text-ink/60 mt-3 leading-relaxed">{a.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP -->
+  <section id="leadership" class="py-24 lg:py-32 bg-cream scroll-mt-16">
+    <div class="wrap">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div>
+          <p data-reveal class="kicker text-pine">Leadership</p>
+          <h2 data-reveal class="h-section mt-6">Executive Committee</h2>
+        </div>
+        <p data-reveal class="text-ink/60 max-w-sm">Elected by the voting members of the Association to lead our programmes.</p>
+      </div>
+
+      <h3 data-reveal class="mt-16 mb-6 text-sm font-semibold uppercase tracking-[0.14em] text-ink/50">Founding members</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
+        {founding.map((m, i) => (
+          <figure data-reveal class:list={['portrait group', { 'col-span-2 aspect-[4/3]! lg:aspect-auto! lg:row-span-2': i === 0 }]}>
+            {m.photo
+              ? <Image src={m.photo} alt={m.name} width={i === 0 ? 900 : 480} loading="lazy" />
+              : <div class="monogram absolute inset-0 grid place-items-center pb-16"><span class="text-6xl lg:text-7xl">{initials(m.name)}</span></div>}
+            <div class="shade"></div>
+            <figcaption class="absolute left-0 right-0 bottom-0 p-5 lg:p-6 text-ivory">
+              {i === 0 && <span class="inline-block mb-3 rounded-full bg-brass text-ink text-[11px] font-bold uppercase tracking-wider px-3 py-1">President</span>}
+              <p class:list={['font-display font-semibold tracking-tight leading-tight', i === 0 ? 'text-3xl lg:text-4xl' : 'text-lg lg:text-xl']}>{m.name}</p>
+              {i !== 0 && <p class="text-[13px] text-ivory/70 mt-1">{m.role}</p>}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+
+      <h3 data-reveal class="mt-20 mb-6 text-sm font-semibold uppercase tracking-[0.14em] text-ink/50">Executive members</h3>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {executive.map((m) => (
+          <div data-reveal class="card lift px-5 py-4 flex items-center gap-4 min-w-0">
+            <span class="initial-dot w-12 h-12 rounded-full text-white font-semibold text-sm grid place-items-center shrink-0">{initials(m.name)}</span>
+            <div class="min-w-0">
+              <p class="font-semibold truncate">{m.name}</p>
+              <p class="text-sm text-ink/55 truncate">{m.role}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVISORY -->
+  <section id="advisors" class="py-24 lg:py-32 bg-ink text-ivory relative overflow-hidden">
+    <span aria-hidden="true" class="blob blob-red" style="opacity:.25; top:auto; bottom:-30vw; right:-20vw"></span>
+    <div class="wrap relative grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      <div class="lg:col-span-7">
+        <p data-reveal class="kicker text-brass">Advisory panel</p>
+        <h2 data-reveal class="h-section mt-6">Guidance from senior voices</h2>
+        <p data-reveal class="mt-6 text-ivory/65 text-lg max-w-xl leading-relaxed">The Advisory Panel links existing students with alumni, helps run elections, and offers guidance. It includes:</p>
+        <ul class="mt-10 grid sm:grid-cols-2 gap-3">
+          {advisory.map((a) => (
+            <li data-reveal class="flex gap-4 rounded-2xl bg-white/[.04] ring-1 ring-white/10 p-5">
+              <span class="w-7 h-7 rounded-full bg-brass text-ink grid place-items-center shrink-0"><Icon name="check" class="w-4 h-4" /></span>
+              <span class="text-ivory/85 leading-snug">{a}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div data-reveal class="lg:col-span-5">
+        <div class="rounded-[28px] bg-ivory text-ink p-10 lg:p-12">
+          <span class="w-14 h-14 rounded-2xl bg-pine text-ivory grid place-items-center"><Icon name="star" class="w-6 h-6" /></span>
+          <p class="font-display font-bold text-3xl tracking-tight mt-8">Want to contribute?</p>
+          <p class="text-ink/65 mt-4 leading-relaxed">Alumni and senior community members can offer mentorship and guidance. Reach out and we will get in touch.</p>
+          <a href="#contact" class="btn btn-pine btn-lg mt-8">Contact us <Icon name="arrow" class="w-4 h-4" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMBERSHIP -->
+  <section id="join" class="py-24 lg:py-32 scroll-mt-16">
+    <div class="wrap grid lg:grid-cols-12 gap-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <p data-reveal class="kicker text-pine">Membership</p>
+        <h2 data-reveal class="h-section mt-6">Who can join?</h2>
+        <div class="mt-10 space-y-3">
+          {membershipTypes.map((t) => (
+            <div data-reveal class="card lift p-6 flex gap-5 items-start">
+              <span class="w-12 h-12 rounded-2xl bg-pine-soft text-pine grid place-items-center shrink-0"><Icon name={t.icon} /></span>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-3">
+                  <p class="font-display font-semibold text-xl tracking-tight">{t.title}</p>
+                  {t.voting && <span class="text-[11px] font-semibold uppercase tracking-wider text-pine bg-pine-soft rounded-full px-2.5 py-1">Voting</span>}
+                </div>
+                <p class="text-ink/60 mt-1">{t.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p data-reveal class="mt-5 text-sm text-ink/50">Voting rights are reserved for Student and Alumni Members.</p>
+      </div>
+
+      <div data-reveal class="lg:col-span-7">
+        <form data-form="join" data-endpoint={formEndpoint} class="card p-7 sm:p-10 lg:p-12" novalidate>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+          <p class="font-display font-bold text-3xl tracking-tight">Register your interest</p>
+          <p class="text-ink/60 mt-2">Send us your details and we will add you to the member register.</p>
+          <p data-error hidden class="mt-6 rounded-2xl bg-pine-soft text-pine px-5 py-4 text-sm font-medium" role="alert"></p>
+          <fieldset class="mt-8">
+            <legend class="text-[13px] font-medium text-ink/70 mb-2.5">I am a…</legend>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {statuses.map((s, i) => (
+                <label class="choice relative"><input type="radio" name="status" value={s.value} checked={i === 0} /><span>{s.label}</span></label>
+              ))}
+            </div>
+          </fieldset>
+          <div class="mt-6 grid sm:grid-cols-2 gap-4">
+            <label class="field"><span>Given name</span><input class="input" name="given_name" required autocomplete="given-name" /></label>
+            <label class="field"><span>Surname</span><input class="input" name="surname" required autocomplete="family-name" /></label>
+            <label class="field"><span>Email</span><input class="input" type="email" name="email" required autocomplete="email" /></label>
+            <label class="field"><span>Phone</span><input class="input" type="tel" name="phone" autocomplete="tel" /></label>
+            <label class="field"><span>University / institution</span><input class="input" name="university" placeholder="e.g. KU Leuven" /></label>
+            <label class="field"><span>Field of study</span><input class="input" name="field_of_study" placeholder="e.g. Computer Science" /></label>
+          </div>
+          <div class="mt-8 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4">
+            <p class="text-sm text-ink/50">Only the committee sees your details.</p>
+            <button class="btn btn-pine btn-lg justify-center">Submit <Icon name="arrow" class="w-4 h-4" /></button>
+          </div>
+        </form>
+        <div data-success="join" hidden class="rounded-[28px] bg-pine text-ivory p-10 sm:p-14">
+          <span class="w-14 h-14 rounded-full bg-white/15 grid place-items-center"><Icon name="check" class="w-7 h-7" /></span>
+          <p class="font-display font-bold text-4xl tracking-tight mt-8">Thanks for registering.</p>
+          <p data-success-text class="text-ivory/75 mt-4 max-w-md leading-relaxed">The committee will add you to the member register and get in touch by email.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-24 lg:py-32 bg-cream scroll-mt-16">
+    <div class="wrap grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      <div class="lg:col-span-5">
+        <p data-reveal class="kicker text-pine">Contact</p>
+        <h2 data-reveal class="h-section mt-6">We'd love to hear from you</h2>
+        <p data-reveal class="mt-6 text-ink/65 text-lg leading-relaxed max-w-md">Questions about membership, events or partnerships? Send us a message.</p>
+        <div data-reveal class="mt-10 flex flex-col gap-3 max-w-sm">
+          <a href={`mailto:${EMAIL}`} class="card lift px-6 py-5 flex items-center justify-between group">
+            <span class="flex items-center gap-4"><span class="text-pine"><Icon name="mail" /></span><span class="font-medium">{EMAIL}</span></span>
+            <span class="text-ink/30 group-hover:text-ink transition"><Icon name="arrow-up-right" class="w-4 h-4" /></span>
+          </a>
+          <a href={FACEBOOK_URL} target="_blank" rel="noopener" class="card lift px-6 py-5 flex items-center justify-between group">
+            <span class="flex items-center gap-4"><span class="text-pine"><Icon name="facebook" /></span><span class="font-medium">BSAAB Facebook group</span></span>
+            <span class="text-ink/30 group-hover:text-ink transition"><Icon name="arrow-up-right" class="w-4 h-4" /></span>
+          </a>
+        </div>
+      </div>
+      <div data-reveal class="lg:col-span-7">
+        <form data-form="contact" data-endpoint={formEndpoint} class="card p-7 sm:p-10 lg:p-12 space-y-4" novalidate>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+          <p data-error hidden class="rounded-2xl bg-pine-soft text-pine px-5 py-4 text-sm font-medium" role="alert"></p>
+          <label class="field"><span>Subject</span><input class="input" name="subject" /></label>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <label class="field"><span>Your name</span><input class="input" name="name" required autocomplete="name" /></label>
+            <label class="field"><span>Your email</span><input class="input" type="email" name="email" required autocomplete="email" /></label>
+          </div>
+          <label class="field"><span>Message</span><textarea class="input resize-none" name="message" rows="6" required></textarea></label>
+          <div class="pt-4 flex justify-end">
+            <button class="btn btn-pine btn-lg justify-center w-full sm:w-auto">Send message <Icon name="arrow" class="w-4 h-4" /></button>
+          </div>
+        </form>
+        <div data-success="contact" hidden class="rounded-[28px] bg-ink text-ivory p-10 sm:p-14">
+          <span class="w-14 h-14 rounded-full bg-brass text-ink grid place-items-center"><Icon name="check" class="w-7 h-7" /></span>
+          <p class="font-display font-bold text-4xl tracking-tight mt-8">Message received.</p>
+          <p data-success-text class="text-ivory/70 mt-4 max-w-md leading-relaxed">Thank you for reaching out. Someone from the committee will reply by email.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+</Layout>

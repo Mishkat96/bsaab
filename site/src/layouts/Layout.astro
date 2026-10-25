@@ -1,0 +1,111 @@
+---
+import '../styles/global.css';
+import { Image } from 'astro:assets';
+import Icon from '../components/Icon.astro';
+import logo from '../assets/logo.png';
+import { nav, EMAIL, FACEBOOK_URL, REG_NUMBER } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'BSAAB · Bangladeshi Student and Alumni Association in Belgium',
+  description = `BSAAB is a registered non-profit uniting Bangladeshi students and alumni across Belgium. Enterprise number ${REG_NUMBER}.`,
+} = Astro.props;
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#121014" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <script is:inline>
+      // Hide animated elements before first paint; reveal everything if the motion script never starts.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('anim');
+        setTimeout(() => { if (!window.__motionReady) document.documentElement.classList.remove('anim'); }, 3000);
+      }
+    </script>
+  </head>
+  <body class="bg-ivory text-ink font-sans antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-ivory focus:px-4 focus:py-2 focus:rounded-full">Skip to content</a>
+
+    <header id="nav" class="nav fixed inset-x-0 top-0 z-50">
+      <div class="wrap h-[76px] flex items-center justify-between gap-6">
+        <a href="#top" class="flex items-center gap-3 shrink-0" aria-label="BSAAB home">
+          <span class="logo-chip"><Image src={logo} alt="" width={64} class="h-7 w-auto" /></span>
+          <span class="font-display font-bold text-lg tracking-tight">BSAAB</span>
+        </a>
+        <nav class="hidden lg:flex items-center gap-1 text-[14px]" aria-label="Main">
+          {nav.map((l) => <a href={l.href} class="nav-link">{l.label}</a>)}
+        </nav>
+        <div class="flex items-center gap-2">
+          <a href="#join" class="btn btn-brass hidden sm:inline-flex">Become a member <Icon name="arrow" class="w-4 h-4" /></a>
+          <button id="menuBtn" class="lg:hidden w-11 h-11 rounded-full grid place-items-center nav-icon" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+            <Icon name="menu" />
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div id="mobileMenu" class="mobile-menu fixed inset-0 z-[60] bg-ink text-ivory lg:hidden" aria-hidden="true">
+      <div class="wrap h-[76px] flex items-center justify-between">
+        <span class="font-display font-bold text-lg">BSAAB</span>
+        <button id="menuClose" class="w-11 h-11 rounded-full grid place-items-center bg-white/10" aria-label="Close menu"><Icon name="close" /></button>
+      </div>
+      <nav class="wrap pt-8 flex flex-col" aria-label="Mobile">
+        {nav.map((l) => <a href={l.href} class="mobile-link font-display text-4xl font-semibold py-3 border-b border-white/10">{l.label}</a>)}
+        <a href="#join" class="mobile-link btn btn-brass btn-lg justify-center mt-10">Become a member</a>
+      </nav>
+    </div>
+
+    <slot />
+
+    <footer class="bg-ink text-ivory relative overflow-hidden">
+      <div class="wrap pt-24 pb-10 relative">
+        <div class="grid lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-6">
+            <p class="font-display font-bold text-4xl sm:text-5xl tracking-tight leading-none">Far from home.<br /><span class="text-brass">Never alone.</span></p>
+            <a href="#join" class="btn btn-brass btn-lg mt-10">Become a member <Icon name="arrow" class="w-4 h-4" /></a>
+          </div>
+          <div class="lg:col-span-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-ivory/40">Explore</p>
+            <ul class="mt-5 space-y-3 text-ivory/75">
+              {nav.map((l) => <li><a href={l.href} class="hover:text-brass transition-colors">{l.label}</a></li>)}
+              <li><a href="/constitution.pdf" target="_blank" class="hover:text-brass transition-colors">Constitution (PDF)</a></li>
+            </ul>
+          </div>
+          <div class="lg:col-span-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-ivory/40">Association</p>
+            <ul class="mt-5 space-y-3 text-ivory/75">
+              <li><a href={`mailto:${EMAIL}`} class="hover:text-brass transition-colors">{EMAIL}</a></li>
+              <li><a href={FACEBOOK_URL} target="_blank" rel="noopener" class="hover:text-brass transition-colors">Facebook group</a></li>
+              <li>Ixelles, Brussels</li>
+              <li class="font-mono text-sm text-ivory/50">{REG_NUMBER}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-white/10 pt-8">
+          <div class="flex items-center gap-3">
+            <span class="logo-chip"><Image src={logo} alt="" width={64} class="h-7 w-auto" /></span>
+            <span class="text-sm text-ivory/50">Bangladeshi Student and Alumni Association in Belgium</span>
+          </div>
+          <p class="text-sm text-ivory/40">&copy; {year} BSAAB. All rights reserved.</p>
+        </div>
+      </div>
+      <p aria-hidden="true" class="wordmark text-center select-none -mb-[0.12em]">BSAAB</p>
+    </footer>
+
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>
